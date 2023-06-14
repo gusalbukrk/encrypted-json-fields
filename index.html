@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .post {
+      margin-bottom: 5rem;
+    }
+  </style>
+  <title>Store</title>
+</head>
+<body>
+  <main></main>
+  <template id="post">
+    <article class="post">
+      <img src="" width="200" />
+      <h2></h2>
+      <h3></h3>
+      <p></p>
+    </article>
+  </template>
+<script src="node_modules/simple-crypto-js/dist/SimpleCrypto.min.js"></script>
+<script type="module">
+  (async () => {
+    const simpleCrypto = new SimpleCrypto('');
+
+    const products = await (await fetch('./products.json')).json();
+    console.log(products);
+
+    const template = document.getElementById('post');
+
+    products.forEach(product => {
+      const clone = template.content.cloneNode(true);
+      clone.querySelector('img').src = simpleCrypto.decrypt(product.thumbnail);
+      clone.querySelector('h2').innerText = product.title;
+      clone.querySelector('h3').innerText = '$ ' + product.price;
+      clone.querySelector('p').innerText = product.description;
+
+      document.querySelector('main').appendChild(clone);
+    });
+  })()
+</script>
+</body>
+</html>
